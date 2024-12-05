@@ -145,3 +145,28 @@ document.getElementById('upload').addEventListener('change', function(e) {
     reader.readAsDataURL(file);
   }
 });
+
+
+// notifikasi download ini bro
+
+// Tombol Unggah
+const uploadBtn = document.getElementById("upload-btn");
+const uploadInput = document.getElementById("upload");
+uploadBtn.addEventListener("click", () => {
+  uploadInput.click();
+});
+
+// Tombol Download
+const downloadBtn = document.getElementById("download-btn");
+downloadBtn.addEventListener("click", () => {
+  const userConfirmation = confirm("Apakah Anda yakin ingin mendownload hasil gambar?");
+  if (userConfirmation) {
+    const resultImage = document.getElementById("result-image").src;
+    const link = document.createElement("a");
+    link.href = resultImage;
+    link.download = "hasil-gambar.png";
+    link.click();
+  } else {
+    alert("Download dibatalkan.");
+  }
+});
