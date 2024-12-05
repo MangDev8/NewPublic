@@ -57,6 +57,28 @@ button:active {
   transform: scale(0.98);
 }
 
+/* Cropper Section */
+#cropper-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#cropper-image {
+  max-width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#crop-btn {
+  background-color: #28a745;
+  margin-top: 20px;
+}
+
+#crop-btn:hover {
+  background-color: #218838;
+}
+
 /* Result Section */
 #result-section {
   margin-top: 20px;

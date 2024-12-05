@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Remove BG & HD for MangDev8</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
 </head>
 <body>
   <header>
@@ -15,6 +16,15 @@
     <h2>Unggah gambar untuk menghapus latar belakang</h2>
     <input type="file" id="upload" accept="image/*" hidden>
     <button id="upload-btn">Unggah Gambar</button>
+  
+    <!-- Cropper Section -->
+    <div id="cropper-section" style="display: none; margin-top: 20px;">
+      <h3>Potong Gambar</h3>
+      <div style="max-width: 100%; overflow: hidden;">
+        <img id="cropper-image" style="max-width: 100%; height: auto;" />
+      </div>
+      <button id="crop-btn">Simpan Gambar</button>
+    </div>
   
     <!-- Loading Section -->
     <div id="loading" style="display: none; text-align: center; margin-top: 20px;">
@@ -57,6 +67,7 @@
     <p>© 2024 Remove BG & HD | Gratis | Web Ini Di Kembangkan Oleh <strong>MangDev8</strong></p>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
