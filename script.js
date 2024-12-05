@@ -145,4 +145,3 @@ document.getElementById('upload').addEventListener('change', function(e) {
     reader.readAsDataURL(file);
   }
 });
-
