@@ -152,18 +152,40 @@ document.getElementById('upload').addEventListener('change', function(e) {
 // Tombol Unggah
 const uploadBtn = document.getElementById("upload-btn");
 const uploadInput = document.getElementById("upload");
+const resultImage = document.getElementById("result-image");
+const downloadBtn = document.getElementById("download-btn");
+const resultSection = document.getElementById("result-section");
+
 uploadBtn.addEventListener("click", () => {
   uploadInput.click();
 });
 
+// Ketika Gambar Diunggah
+uploadInput.addEventListener("change", (event) => {
+  const file = event.target.files[0];
+
+  if (file) {
+    // Hapus gambar sebelumnya jika ada
+    resultImage.src = "";
+    downloadBtn.disabled = true;
+
+    // Tampilkan gambar baru
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      resultImage.src = e.target.result;
+      resultSection.style.display = "block"; // Tampilkan hasil
+      downloadBtn.disabled = false; // Aktifkan tombol download
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
 // Tombol Download
-const downloadBtn = document.getElementById("download-btn");
 downloadBtn.addEventListener("click", () => {
   const userConfirmation = confirm("Apakah Anda yakin ingin mendownload hasil gambar?");
   if (userConfirmation) {
-    const resultImage = document.getElementById("result-image").src;
     const link = document.createElement("a");
-    link.href = resultImage;
+    link.href = resultImage.src;
     link.download = "hasil-gambar.png";
     link.click();
   } else {
