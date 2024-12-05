@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Remove BG & HD</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Penghapus <span style="color: #6F4F1E">Ajaib</span></h1>
+  </header>
+  
+  <main>
+    <h2>Unggah gambar untuk menghapus latar belakang</h2>
+    <input type="file" id="upload" accept="image/*" hidden>
+    <button id="upload-btn">Unggah Gambar</button>
+  
+    <!-- Loading Section -->
+    <div id="loading" style="display: none; text-align: center; margin-top: 20px;">
+      <div class="stars"></div>
+      <div class="loading-bar-container">
+        <div class="loading-bar">
+          <div id="progress" style="width: 0;"></div>
+        </div>
+        <p id="progress-text">0%</p>
+      </div>
+    </div>
+  
+    <!-- Result Section -->
+    <div id="result-section" style="display: none; margin-top: 20px;">
+      <h3>Hasil Gambar</h3>
+      
+      <!-- Menambahkan fitur perbandingan gambar -->
+      <div class="comparison-container">
+        <div class="before-image">
+          <h4>Sebelum</h4>
+          <img id="before-image" alt="Gambar Sebelum" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+        </div>
+        <div class="after-image">
+          <h4>Sesudah</h4>
+          <img id="result-image" alt="Hasil Gambar" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+        </div>
+      </div>
+      
+      <canvas id="hd-canvas" style="display: none;"></canvas>
+      
+      <div id="options" style="margin-top: 20px;">
+        <button id="remove-bg-btn">Hapus Background & HD</button>
+        <button id="hd-btn">Hanya HD</button>
+        <button id="download-btn">Download</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2024 Remove BG & HD | Gratis | Web Ini Di Kembangkan Oleh <strong>MangDev8</strong></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
