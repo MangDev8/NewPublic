@@ -1,69 +1,51 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Remove BG & HD for MangDev8</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MangDev8 - Background Remover AI</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <header>
-    <h1>Penghapus <span style="color: #6F4F1E">Ajaib</span></h1>
-  </header>
-  
-  <main>
-    <h2>Unggah gambar untuk menghapus latar belakang</h2>
-    <input type="file" id="upload" accept="image/*" hidden>
-    <button id="upload-btn">Unggah Gambar</button>
-  
-    <!-- Cropper Section -->
-    <div id="cropper-section" style="display: none; margin-top: 20px;">
-      <h3>Potong Gambar</h3>
-      <div style="max-width: 100%; overflow: hidden;">
-        <img id="cropper-image" style="max-width: 100%; height: auto;" />
-      </div>
-      <button id="crop-btn">Simpan Gambar</button>
-    </div>
-  
-    <!-- Loading Section -->
-    <div id="loading" style="display: none; text-align: center; margin-top: 20px;">
-      <div class="stars"></div>
-      <div class="loading-bar-container">
-        <div class="loading-bar">
-          <div id="progress" style="width: 0;"></div>
-        </div>
-        <p id="progress-text">0%</p>
-      </div>
-    </div>
-  
-    <!-- Result Section -->
-    <div id="result-section" style="display: none; margin-top: 20px;">
-      <h3>Hasil Gambar</h3>
-      <div class="comparison-container">
-        <div class="before-image">
-          <h4>Sebelum</h4>
-          <img id="before-image" alt="Gambar Sebelum" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 8px;">
-        </div>
-        <div class="after-image">
-          <h4>Sesudah</h4>
-          <img id="result-image" alt="Hasil Gambar" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 8px;">
-        </div>
-      </div>
-      
-      <div id="options" style="margin-top: 20px;">
-        <button id="remove-bg-btn">Hapus Background & HD</button>
-        <button id="hd-btn">Hanya HD</button>
-        <button id="download-btn" disabled>Download</button>
-      </div>
-    </div>
-  </main>
-  
-  <footer>
-    <p>© 2024 Remove BG & HD | Gratis | Web Ini Di Kembangkan Oleh <strong>MangDev8</strong></p>
-  </footer>
+    <header>
+  <div class="container">
+   <a href="#" class="logo">MangDev8</a>
+  </div>
+    </header>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-  <script src="script.js"></script>
+    <section class="intro-section">
+        <div class="container">
+            <h1>Selamat Datang di MangDev8 Background Remover AI</h1>
+            <p>Unggah gambar Anda dan hapus latar belakangnya dengan mudah menggunakan alat berbasis AI kami.</p>
+        </div>
+    </section>
+
+    <section class="upload-section">
+        <div class="container">
+            <h2>Unggah Gambar</h2>
+            <p>Pilih gambar untuk menghapus latar belakangnya.</p>
+            <div class="upload-area">
+                <input type="file" id="upload" accept="image/*">
+                <label for="upload" id="upload-btn">Unggah Gambar</label>
+                <div id="loading" class="loading">
+                    <div id="progress"></div>
+                    <p id="progress-text">Memproses...</p>
+                </div>
+                <div id="result-section" class="result-section">
+                    <img id="result-image" src="" alt="Gambar Terproses">
+                    <button id="download-btn">Unduh</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 MangDev8. Semua Hak Dilindungi.</p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+    <script src="wasm-script.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/rocketseat/wasm-remove-background@main/wasm-remove-background.js"></script>
 </body>
 </html>
