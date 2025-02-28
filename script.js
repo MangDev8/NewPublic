@@ -55,3 +55,33 @@ document.getElementById("upload").addEventListener("change", async function(even
     document.getElementById("loading").style.display = "none";
   }
 });
+
+
+function updateProgressBar(percent) {
+  let progressBar = document.getElementById("progress-bar");
+  let progressText = document.getElementById("progress-text");
+  
+  progressBar.style.width = percent + "%"; // Update lebar progress bar
+  progressText.innerText = percent + "%"; // Update teks persentase
+}
+
+// Simulasi proses upload dengan setInterval
+function startUploadSimulation() {
+  let progress = 0;
+  updateProgressBar(progress); // Set awal 0%
+  
+  let interval = setInterval(() => {
+    progress += 10; // Tambah 10% setiap interval
+    updateProgressBar(progress);
+    
+    if (progress >= 100) {
+      clearInterval(interval);
+      alert("Upload selesai!"); // Notifikasi jika sudah 100%
+    }
+  }, 500); // Update setiap 0.5 detik
+}
+
+// Event listener untuk tombol upload
+document.getElementById("upload-btn").addEventListener("click", () => {
+  startUploadSimulation();
+});
