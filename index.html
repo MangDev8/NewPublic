@@ -1,54 +1,212 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MangDev8 - Background Remover AI</title>
-    <link rel="stylesheet" href="css/styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StoryWebApp HP Ringan</title>
+<link rel="icon" href="g1.png" type="image/png">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Roboto',sans-serif;margin:0;padding:0;background:#f5f5f5;}
+header{position:fixed;top:0;left:0;right:0;background:#222;color:#fff;z-index:1000;box-shadow:0 2px 5px rgba(0,0,0,.3);}
+header .container{display:flex;justify-content:space-between;align-items:center;height:60px;padding:0 1rem;}
+.logo{color:#fff;text-decoration:none;font-weight:700;font-size:1.25rem;}
+section{padding:80px 1rem 2rem 1rem;}
+.upload-box{background:#222;padding:1rem;border-radius:12px;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.1);margin-bottom:2rem;}
+.upload-box input, .upload-box button{background:#111;color:#fff;border:1px solid #444;margin-bottom:0.5rem;}
+#status{margin-top:0.5rem;font-size:0.9rem;}
+.story-card{background:#fff;border-radius:12px;margin-bottom:1rem;padding:0;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.1);}
+.story-card img{width:100%;object-fit:cover;}
+.story-body{padding:0.75rem;}
+.story-title{font-weight:600;margin:0 0 0.25rem 0;}
+.story-desc{font-size:0.9rem;color:#555;}
+.story-meta{font-size:0.8rem;color:#888;display:flex;justify-content:space-between;align-items:center;}
+.story-meta i{cursor:pointer;}
+.comment-box{margin-top:0.5rem;}
+.comment-item{font-size:0.85rem;padding:0.25rem 0;border-bottom:1px solid #eee;display:flex;justify-content:space-between;}
+</style>
 </head>
 <body>
-    <header>
+
+<header>
   <div class="container">
-   <a href="#" class="logo">MangDev8</a>
-    </header>
+    <a href="#" class="logo">StoryWebApp</a>
+    <button id="btnLogin" class="btn btn-sm btn-light">Login Google</button>
+  </div>
+</header>
 
-    <section class="intro-section">
-        <div class="container">
-            <h1>Selamat Datang di MangDev8 Background Remover AI</h1>
-            <p>Unggah gambar Anda dan hapus latar belakangnya dengan mudah menggunakan alat berbasis AI kami.</p>
-        </div>
-    </section>
+<section id="upload">
+  <h2>Upload Story (Gambar)</h2>
+  <div class="upload-box">
+    <input type="file" id="mediaInput" accept="image/*">
+    <input type="text" id="titleInput" placeholder="Judul (opsional)">
+    <input type="text" id="descInput" placeholder="Deskripsi (opsional)">
+    <button id="btnUpload">Upload</button>
+    <div id="status"></div>
+  </div>
+</section>
 
-    <section class="upload-section">
-        <div class="container">
-            <h2>Unggah Gambar</h2>
-            <p>Pilih gambar untuk menghapus latar belakangnya.</p>
-            <div class="upload-area">
-                <input type="file" id="upload" accept="image/*">
-                <label for="upload" id="upload-btn">Unggah Gambar</label>
-                <div id="loading" class="loading">
-                  <div class="progress-container">
-  <div class="progress-bar" id="progress-bar">SABAR CUY! </div>
-</div>
-<p id="progress-text">Sedang Memperoses Mohon Tunggu...</p>
-                </div>
-                
-                
-                <div id="result-section" class="result-section">
-                    <img id="result-image" src="" alt="Gambar Terproses">
-                    <button id="download-btn">Unduh</button>
-                </div>
-            </div>
-        </div>
-    </section>
+<section id="stories">
+  <h2>Stories Terbaru</h2>
+  <div id="galleryContainer" class="container"></div>
+</section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 MangDev8. Semua Hak Dilindungi.</p>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, Timestamp, updateDoc, arrayUnion, arrayRemove, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDg9WKZH-9Sm-OtVmpbGmtSGMrLg9o-rIE",
+  authDomain: "web-post-grup.firebaseapp.com",
+  projectId: "web-post-grup",
+  storageBucket: "web-post-grup.appspot.com",
+  messagingSenderId: "517806650620",
+  appId: "1:517806650620:web:3ecbfab8b41a2b826a1379"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+let currentUser = null;
+
+const mediaInput = document.getElementById("mediaInput");
+const titleInput = document.getElementById("titleInput");
+const descInput = document.getElementById("descInput");
+const btnUpload = document.getElementById("btnUpload");
+const statusEl = document.getElementById("status");
+const btnLogin = document.getElementById("btnLogin");
+const galleryContainer = document.getElementById("galleryContainer");
+
+function showStatus(msg){ statusEl.textContent = msg; }
+
+btnLogin.addEventListener("click", async ()=>{
+  if(!currentUser){
+    try{
+      const result = await signInWithPopup(auth, provider);
+      currentUser = result.user;
+      btnLogin.textContent="Logout";
+      showStatus("Login sukses: "+currentUser.displayName);
+    }catch(err){ showStatus("❌ "+err.message); }
+  }else{
+    await signOut(auth);
+    currentUser = null;
+    btnLogin.textContent="Login Google";
+    showStatus("Logout sukses");
+  }
+});
+
+btnUpload.addEventListener("click", async ()=>{
+  if(!currentUser){ showStatus("Login dulu!"); return; }
+  const file = mediaInput.files[0];
+  if(!file){ showStatus("Pilih gambar!"); return; }
+  const title = titleInput.value || "";
+  const desc = descInput.value || "";
+
+  btnUpload.disabled = true;
+  showStatus("Mengupload...");
+
+  try{
+    const fileRef = ref(storage, 'stories/' + Date.now() + "_" + file.name);
+    const uploadTask = uploadBytesResumable(fileRef, file);
+
+    // Tunggu selesai upload
+    await new Promise((resolve, reject)=>{
+      uploadTask.on('state_changed', 
+        snapshot=>{
+          const progress = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+          showStatus("Uploading: "+Math.floor(progress)+"%");
+        }, 
+        error=>reject(error), 
+        ()=>resolve()
+      );
+    });
+
+    const mediaUrl = await getDownloadURL(fileRef);
+
+    await addDoc(collection(db,"stories"),{
+      uid: currentUser.uid,
+      username: currentUser.displayName,
+      title, desc,
+      mediaUrl,
+      likes: [], comments: [],
+      createdAt: Timestamp.now()
+    });
+
+    showStatus("✅ Upload sukses!");
+    mediaInput.value=""; titleInput.value=""; descInput.value="";
+  }catch(err){
+    showStatus("❌ "+err.message);
+  }finally{
+    btnUpload.disabled=false;
+  }
+});
+
+// Realtime stories
+const storiesQuery = query(collection(db,"stories"), orderBy("createdAt","desc"));
+onSnapshot(storiesQuery, snapshot=>{
+  galleryContainer.innerHTML="";
+  snapshot.docs.forEach(docSnap=>{
+    const data = docSnap.data();
+    const card = document.createElement("div");
+    card.className="story-card mb-2";
+    card.innerHTML = `
+      <img src="${data.mediaUrl}" alt="">
+      <div class="story-body">
+        <strong>${data.username}</strong>
+        <h3 class="story-title">${data.title}</h3>
+        <p class="story-desc">${data.desc}</p>
+        <div class="story-meta">
+          <span><i class="fa-regular fa-heart"></i> <span class="like-count">${data.likes.length}</span></span>
         </div>
-    </footer>
-    <script src="script.js"></script>
-    <script src="wasm-script.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/rocketseat/wasm-remove-background@main/wasm-remove-background.js"></script>
+        <div class="comment-box"></div>
+        <input type="text" class="form-control mb-1 comment-input" placeholder="Tulis komentar...">
+        <button class="btn btn-sm btn-secondary w-100 comment-btn">Kirim</button>
+      </div>
+    `;
+
+    const likeIcon = card.querySelector(".fa-heart");
+    likeIcon.addEventListener("click", async ()=>{
+      if(!currentUser){ showStatus("Login dulu!"); return; }
+      const docRef = doc(db,"stories",docSnap.id);
+      if(data.likes.includes(currentUser.uid)){
+        await updateDoc(docRef,{likes: arrayRemove(currentUser.uid)});
+      }else{
+        await updateDoc(docRef,{likes: arrayUnion(currentUser.uid)});
+      }
+    });
+
+    const commentBtn = card.querySelector(".comment-btn");
+    const commentInput = card.querySelector(".comment-input");
+    const commentBox = card.querySelector(".comment-box");
+    commentBtn.addEventListener("click", async ()=>{
+      if(!currentUser){ showStatus("Login dulu!"); return; }
+      if(commentInput.value.trim()==="") return;
+      const docRef = doc(db,"stories",docSnap.id);
+      await updateDoc(docRef,{comments: arrayUnion({uid:currentUser.uid,username:currentUser.displayName,text:commentInput.value.trim()})});
+      commentInput.value="";
+    });
+
+    function renderComments(){
+      commentBox.innerHTML="";
+      data.comments?.forEach(c=>{
+        const div = document.createElement("div");
+        div.className="comment-item";
+        div.innerHTML=`<strong>${c.username}:</strong> ${c.text}`;
+        commentBox.appendChild(div);
+      });
+    }
+    renderComments();
+
+    galleryContainer.prepend(card);
+  });
+});
+</script>
+
 </body>
 </html>
